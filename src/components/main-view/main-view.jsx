@@ -21,11 +21,31 @@ export const MainView = () => {
   }, []);
 
   if (selectedMovie) {
+    const similarMovies = movies.filter(
+      (movie) =>
+        movie.Genre.Name === selectedMovie.Genre.Name &&
+        movie._id !== selectedMovie._id
+    );
     return (
-      <MovieView
-        movie={selectedMovie}
-        onBackClick={() => setSelectedMovie(null)}
-      />
+      <>
+        <MovieView
+          movie={selectedMovie}
+          onBackClick={() => {
+            setSelectedMovie(null);
+          }}
+        />
+        <hr />
+        <h2>Similar movies</h2>
+        {similarMovies.map((movie) => (
+          <MovieCard
+            key={movie._id}
+            movie={movie}
+            onMovieClick={(newSelectedMovie) => {
+              setSelectedMovie(newSelectedMovie);
+            }}
+          />
+        ))}
+      </>
     );
   }
 
@@ -40,8 +60,8 @@ export const MainView = () => {
       </div>
       {movies.map((movie, index) => (
         <MovieCard
-          key={index} // Using index as key, assuming titles are unique
-          movie={{ title: movie }} // Assuming each movie is represented by its title
+          key={movie._id} // Using index as key, assuming titles are unique
+          movie={movie} // Assuming each movie is represented by its title
           onMovieClick={(newSelectedMovie) => {
             setSelectedMovie(newSelectedMovie);
           }}
